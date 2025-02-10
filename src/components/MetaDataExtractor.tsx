@@ -1,28 +1,31 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import { MetaExtractor, MetaData } from '../utils/MetaExtractor';
+import { SeoEnhancer } from '../utils/SeoEnhancer';
 
 interface MetaDataExtractorProps {
   children: React.ReactNode;
   onExtract?: (metadata: MetaData) => void;
+  autoEnhance?: boolean;
 }
 
 export const MetaDataExtractor: React.FC<MetaDataExtractorProps> = ({ 
   children, 
-  onExtract 
+  onExtract,
+  autoEnhance = true
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const extractMetadata = useCallback(() => {
+  useEffect(() => {
     if (containerRef.current) {
-      const metadata = MetaExtractor.extractFromElement(containerRef.current);
+      let metadata = MetaExtractor.extractFromElement(containerRef.current);
+      
+      if (autoEnhance) {
+        metadata = SeoEnhancer.enhanceMetadata(metadata);
+      }
+      
       onExtract?.(metadata);
-      return metadata;
     }
-  }, [onExtract]);
+  }, [onExtract, autoEnhance]);
 
-  return (
-    <div ref={containerRef}>
-      {children}
-    </div>
-  );
+  return <div ref={containerRef}>{children}</div>;
 };
