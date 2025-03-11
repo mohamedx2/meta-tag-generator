@@ -1,5 +1,7 @@
 # Auto Meta Tag Generator
 
+An AI-powered tool for automatically generating optimized meta tags for your web content.
+
 ## Installation
 
 1. Clone the repository and install dependencies:
